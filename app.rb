@@ -25,7 +25,7 @@ class App < Sinatra::Base
   end
 
   post "/webhook" do
-    @event = Event.new(rawdata: params)
+    @event = Event.new(raw_data: params)
 
     if @event.save
       redirect to('/')
