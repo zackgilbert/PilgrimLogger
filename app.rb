@@ -24,6 +24,16 @@ class App < Sinatra::Base
     end
   end
 
+  post "/webhook" do
+    @event = Event.new(params)
+
+    if @event.save
+      redirect to('/')
+    else
+      "Sorry there was an error!"
+    end
+  end
+
   delete '/events/:id' do
     if @event = Event.delete(params[:id])
       redirect to('/')
