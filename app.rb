@@ -28,7 +28,8 @@ class App < Sinatra::Base
   end
 
   post "/webhook" do
-    @event = Event.new(raw_data: JSON.parse(params['json']))
+    params['json'] = JSON.parse(params['json'])
+    @event = Event.new(raw_data: params)
 
     if @event.save
       redirect to('/')
