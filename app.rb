@@ -9,13 +9,16 @@ class App < Sinatra::Base
   get "/" do
     @can_manage = request.query_string.include?('admin')
 
-    @events = Event.all
+    @events = Event.order('id DESC')
 
     erb :index
   end
 
   post "/" do
-    @event = Event.new(params)
+    params['event']['raw_data'] = JSON.parse(params['event']['raw_data'])
+    params['event']['raw_data']['json'] = JSON.parse(params['event']['raw_data']['json'])
+
+    @event = Event.new(params['event'])
 
     if @event.save
       redirect to('/')
@@ -25,7 +28,7 @@ class App < Sinatra::Base
   end
 
   post "/webhook" do
-    @event = Event.new(raw_data: params)
+    @event = Event.new(raw_data: JSON.parse(params['json']))
 
     if @event.save
       redirect to('/')
