@@ -42,7 +42,7 @@ PLATFORMS
 DEPENDENCIES
   pg
   rake
-  sinatra
+  sinatra (~> 2.0.2)
   sinatra-activerecord
 
 RUBY VERSION
