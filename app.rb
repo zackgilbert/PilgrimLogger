@@ -15,21 +15,26 @@ class App < Sinatra::Base
   end
 
   post "/" do
+    params['json'] = JSON.parse(params['json'])
+    @event = Event.new(raw_data: params)
+
+    # if user has set to only accept their webhooks, ignore everything else
+    @should_ignore = ENV['PILGRIM_SECRET'].present? && ( params['secret'] != ENV['PILGRIM_SECRET'] )
+
+    if @should_ignore
+      puts "Ignored because payload secret #{params['secret']} didn't match #{ENV['PILGRIM_SECRET']}"
+    elsif @event.save
+      redirect to('/')
+    else
+      "Sorry there was an error: #{@event.inspect}"
+    end
+  end
+
+  post "/manual" do
     params['event']['raw_data'] = JSON.parse(params['event']['raw_data'])
     params['event']['raw_data']['json'] = JSON.parse(params['event']['raw_data']['json'])
 
     @event = Event.new(params['event'])
-
-    if @event.save
-      redirect to('/')
-    else
-      "Sorry there was an error!"
-    end
-  end
-
-  post "/webhook" do
-    params['json'] = JSON.parse(params['json'])
-    @event = Event.new(raw_data: params)
 
     if @event.save
       redirect to('/')
