@@ -1,0 +1,15 @@
+{
+  "name": "PilgrimLogger",
+  "description": "PilgrimLogger - A simple Sinatra app that collects and displays Pilgrim webhook data.": [
+    "sinatra",
+    "heroku",
+    "cedar",
+    "template"
+  ],
+  "website": "https://github.com/zackgilbert/PilgrimLogger",
+  "success_url": "/",
+  "addons": ["heroku-postgresql:hobby-dev"],
+  "scripts": {
+    "postdeploy": "bundle exec rake db:migrate"
+  }
+}

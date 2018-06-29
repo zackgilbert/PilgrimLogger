@@ -13,7 +13,7 @@ Accepting only from your account
 
 You can add some extra security by setting the `PILGRIM_SECRET` environment variable. If this environment variable is set, any payloads who's secret doesn't match will be ignored. You can find your account's Pilgrim Secret from your Pilgrim Configuration console:
 
-![Screenshot of Webhook configuration](https://cl.ly/0L171i1Q2F39)
+![Screenshot of Webhook configuration](https://dha4w82d62smt.cloudfront.net/items/3V430v1c1r0m2G0M2N3N/Screen%20Shot%202018-06-29%20at%2011.10.54%20AM.png)
 
 
 Accessing locally through ngrok
@@ -37,6 +37,8 @@ Start ngrok'ing!
 1. From terminal: `~/ngrok http 9292`
 1. You can now visit `http://localhost:4040` in your browser to see live requests coming through your ngrok tunnel.
 1. You will be given a `https://*.ngrok.io` forwarding web address that you can use to access your local server.
+
+![Screenshot of ngrok running from terminal](https://dha4w82d62smt.cloudfront.net/items/461E0K3P0E2S1j2Q3i2r/Screen%20Shot%202018-06-29%20at%2011.28.29%20AM.png)
 
 You are now ready to accept Pilgrim webhook payloads! Just add the https version of your ngrok.io url to your Pilgrim Configuration's Webhook URL.
 
