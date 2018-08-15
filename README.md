@@ -7,6 +7,8 @@ This is a tool that will help provide visibility into Foursquare's Pilgrim activ
 
 Built using: Ruby 2.3.3, Sinatra, Postgresql, Bootstrap 4, jQuery.
 
+To start the server (in dev): `bundle exec rackup -p 3000`
+
 
 Accepting only from your account
 ================================
