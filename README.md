@@ -7,6 +7,9 @@ This is a tool that will help provide visibility into Foursquare's Pilgrim activ
 
 Built using: Ruby 2.3.3, Sinatra, Postgresql, Bootstrap 4, jQuery.
 
+Note: If a ENV['PILGRIM_SECRET'] is set, basic http auth will ask for that to view the index. We use dotenv locally to store any env variables in a .env file.
+
+
 To start the server (in dev): `bundle exec rackup -p 3000`
 
 ### To run the irb console:
@@ -90,11 +93,11 @@ It will push to Heroku and give you a URL that your own private pilgrimLogger wi
 Todos:
 ======
 
+X Some type of basic authentication.
 - Improve documents and reliability.
 - Figure out best way to display fields/data (human friendly date fields, display fields in tables, raw data in modal).
 - Improve search. Be able to search for multiple data using and (&&), or (||) and "quoted" modifiers.
 - Ability to handle multi user/app data.
 - Provide basic visualizations/statistics/graphs to easily show occurance of events.
-- Some type of basic authentication.
 - Load lat/lng locations on a map.
 

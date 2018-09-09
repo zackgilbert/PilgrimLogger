@@ -1,12 +1,29 @@
 require "sinatra"
-require 'sinatra/activerecord'
+require "sinatra/activerecord"
 require './config/environments'
 require './models/event'
+require 'dotenv/load'
 
 class App < Sinatra::Base
   set :method_override, true
 
+  @auth = nil
+
+  def authorized?
+    @auth ||= Rack::Auth::Basic::Request.new(request.env)
+    @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials.last == ENV["PILGRIM_SECRET"]
+  end
+
+  def protected!
+    unless authorized?
+      response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
+      throw(:halt, [401, "Oops... we need your pilgrim secret\n"])
+    end
+  end
+
   get "/" do
+    protected! if ENV["PILGRIM_SECRET"].present?
+
     @can_manage = request.query_string.include?('admin')
 
     @events = Event.order('id DESC')
