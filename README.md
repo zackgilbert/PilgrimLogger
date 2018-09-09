@@ -9,6 +9,19 @@ Built using: Ruby 2.3.3, Sinatra, Postgresql, Bootstrap 4, jQuery.
 
 To start the server (in dev): `bundle exec rackup -p 3000`
 
+### To run the irb console:
+
+For local dev environment, in terminal: `irb`
+For heroku prod environment, in terminal: `heroku run console`
+
+Then to load necessary files, paste into prompt:
+```
+require "sinatra"
+require 'sinatra/activerecord'
+require './config/environments'
+require './models/event'
+```
+
 
 Accepting only from your account
 ================================
@@ -80,8 +93,8 @@ Todos:
 - Improve documents and reliability.
 - Figure out best way to display fields/data (human friendly date fields, display fields in tables, raw data in modal).
 - Improve search. Be able to search for multiple data using and (&&), or (||) and "quoted" modifiers.
-- Ability to handle multi user data.
+- Ability to handle multi user/app data.
 - Provide basic visualizations/statistics/graphs to easily show occurance of events.
 - Some type of basic authentication.
-
+- Load lat/lng locations on a map.
 
