@@ -77,7 +77,12 @@ class App < Sinatra::Base
   end
 
   delete '/events/:id' do
-    if @event = Event.delete(params[:id])
+    if params[:id] == 'all'
+      @events = Event.all
+      @events.each {|e| e.destroy! }
+
+      redirect to('/?admin')
+    elsif @event = Event.delete(params[:id])
       redirect to('/?admin')
     else
       "Sorry there was an error!"

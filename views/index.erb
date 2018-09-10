@@ -130,7 +130,15 @@
             <table class="table table-striped table-sm">
               <thead>
                 <tr>
-                  <th>Full Payload</th>
+                  <th>
+                    Full Payload
+                    <% if @events.any? && @can_manage %>
+                    <form action="/events/all" method="post" onsubmit="return confirm('Are you sure you want to delete all webhookl events?');" class="float-right">
+                      <input type="hidden" name="_method" value="DELETE">
+                      <input type="submit" value="Delete All" class="btn btn-danger">
+                    </form>
+                    <% end %>
+                  </th>
                 </tr>
               </thead>
               <tbody>
