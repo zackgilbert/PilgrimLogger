@@ -49,7 +49,7 @@ class App < Sinatra::Base
 
   post "/save" do
     params['json'] = JSON.parse(params['json'])
-    @event = Event.new(raw_data: params)
+    @event = Event.new(raw_data: params, raw_headers: headers)
 
     # if user has set to only accept their webhooks, ignore everything else
     @should_ignore = ENV['PILGRIM_SECRET'].present? && ( params['secret'] != ENV['PILGRIM_SECRET'] )
