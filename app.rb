@@ -56,9 +56,13 @@ class App < Sinatra::Base
 
     if @should_ignore
       puts "Ignored because payload secret #{params['secret']} didn't match #{ENV['PILGRIM_SECRET']}"
+      status 200
+      body ''
     elsif @event.save
-      redirect to('/')
+      status 200
+      body @event.to_json
     else
+      status 500
       "Sorry there was an error: #{@event.inspect}"
     end
   end
