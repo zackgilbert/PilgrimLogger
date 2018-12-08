@@ -17,6 +17,9 @@ ActiveRecord::Schema.define(version: 2018_05_02_032207) do
 
   create_table "events", force: :cascade do |t|
     t.text "raw_data"
+    t.text "raw_headers"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end

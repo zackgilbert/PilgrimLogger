@@ -10,15 +10,41 @@ class App < Sinatra::Base
   @auth = nil
 
   def authorized?
+    puts "ENV: #{ENV["PILGRIM_SECRET"].inspect}"
+
     @auth ||= Rack::Auth::Basic::Request.new(request.env)
     @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials.last == ENV["PILGRIM_SECRET"]
   end
 
   def protected!
-    unless authorized?
+    unless settings.development? || authorized?
       response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
       throw(:halt, [401, "Oops... we need your pilgrim secret\n"])
     end
+  end
+
+  def get_event
+    payload = params
+    my_headers = request.env.reject { |k,v|
+      k.include?('rack.') ||
+      k.include?('sinatra.') ||
+      k.include?('SERVER_') ||
+      k.include?("GATEWAY_INTERFACE") ||
+      k.include?("PATH_INFO") ||
+      k.include?("REMOTE_") ||
+      k.include?("SCRIPT_NAME")
+    }
+
+    if params['secret'] # v1
+      # fix json coming in as encoded
+      payload['json'] = JSON.parse(payload['json'])
+    else # v2
+      payload = JSON.parse(request.body.read).symbolize_keys
+    end
+    puts my_headers.inspect
+    puts payload.inspect
+
+    Event.new(raw_data: payload, raw_headers: my_headers)
   end
 
   get "/" do
@@ -36,7 +62,7 @@ class App < Sinatra::Base
     @event = Event.new(raw_data: params)
 
     # if user has set to only accept their webhooks, ignore everything else
-    @should_ignore = ENV['PILGRIM_SECRET'].present? && ( params['secret'] != ENV['PILGRIM_SECRET'] )
+    @should_ignore = ENV['PILGRIM_SECRET'].present? && ( @event.secret != ENV['PILGRIM_SECRET'] )
 
     if @should_ignore
       puts "Ignored because payload secret #{params['secret']} didn't match #{ENV['PILGRIM_SECRET']}"
@@ -48,11 +74,10 @@ class App < Sinatra::Base
   end
 
   post "/save" do
-    params['json'] = JSON.parse(params['json'])
-    @event = Event.new(raw_data: params, raw_headers: headers)
+    @event = get_event
 
     # if user has set to only accept their webhooks, ignore everything else
-    @should_ignore = ENV['PILGRIM_SECRET'].present? && ( params['secret'] != ENV['PILGRIM_SECRET'] )
+    @should_ignore = ENV['PILGRIM_SECRET'].present? && ( @event.secret != ENV['PILGRIM_SECRET'] )
 
     if @should_ignore
       puts "Ignored because payload secret #{params['secret']} didn't match #{ENV['PILGRIM_SECRET']}"
@@ -71,7 +96,7 @@ class App < Sinatra::Base
     params['event']['raw_data'] = JSON.parse(params['event']['raw_data'])
     params['event']['raw_data']['json'] = JSON.parse(params['event']['raw_data']['json']) if params['event']['raw_data']['json'].present?
 
-    @event = Event.new(params['event'])
+    @event = Event.new(raw_data: params['event'])
 
     if @event.save
       redirect to('/')
