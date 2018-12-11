@@ -1,6 +1,7 @@
 {
   "name": "PilgrimLogger",
-  "description": "PilgrimLogger - A simple Sinatra app that collects and displays Pilgrim webhook data.": [
+  "description": "PilgrimLogger - A simple Sinatra app that collects and displays Pilgrim webhook data.",
+  "keywords": [
     "sinatra",
     "heroku",
     "cedar",
